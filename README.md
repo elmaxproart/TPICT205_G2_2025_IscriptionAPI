@@ -1,44 +1,45 @@
-# API de Gestion des Notes :Module Inscriptions AcadÈmiques
+# API de Gestion des Notes et Inscriptions Acad√©miques
 
 ## Description
-L'API de gestion des notes et du module d'inscription acadÈmique permet de gÈrer les Ètudiants, leurs inscriptions, le choix des unitÈs d'enseignement (UE), des filiËres, et d'autres aspects liÈs ‡ l'organisation acadÈmique. Cette API est documentÈe avec Swagger pour faciliter son utilisation.
+L'API de gestion des notes et du module d'inscription acad√©mique permet de g√©rer les √©tudiants, leurs inscriptions, le choix des unit√©s d'enseignement (UE), des fili√®res, et d'autres aspects li√©s √† l'organisation acad√©mique. Cette API est document√©e avec Swagger pour faciliter son utilisation.
 
-## FonctionnalitÈs principales
-- **Gestion des Ètudiants** : CrÈation, mise ‡ jour, suppression et rÈcupÈration des informations des Ètudiants.
-- **Gestion des inscriptions** : Inscription des Ètudiants aux diffÈrentes filiËres et unitÈs d'enseignement.
-- **Gestion des unitÈs d'enseignement (UE)** : Consultation et attribution des UE aux Ètudiants.
-- **Gestion des filiËres** : Ajout, mise ‡ jour et suppression des filiËres disponibles.
-- **Gestion des notes** : Attribution, modification et rÈcupÈration des notes des Ètudiants.
-- **Authentification et SÈcuritÈ** : Authentification par token et gestion des autorisations.
+## Fonctionnalit√©s principales
+- **Gestion des √©tudiants** : Cr√©ation, mise √† jour, suppression et r√©cup√©ration des informations des √©tudiants.
+- **Gestion des inscriptions** : Inscription des √©tudiants aux diff√©rentes fili√®res et unit√©s d'enseignement.
+- **Gestion des unit√©s d'enseignement (UE)** : Consultation et attribution des UE aux √©tudiants.
+- **Gestion des fili√®res** : Ajout, mise √† jour et suppression des fili√®res disponibles.
+- **Gestion des notes** : Attribution, modification et r√©cup√©ration des notes des √©tudiants.
+- **Authentification et S√©curit√©** : Authentification par token et gestion des autorisations.
+- **Syst√®me O2Auth** : Authentification avanc√©e avec validation par email et g√©n√©ration de token.
 - **Documentation Swagger** : Interface interactive pour tester et comprendre les endpoints.
 
-## Technologies utilisÈes
+## Technologies utilis√©es
 - **Langage** : C#
 - **Framework** : ASP.NET Core
-- **Base de donnÈes** : SQL Server
-- **Authentification** : JWT (JSON Web Token)
+- **Base de donn√©es** : SQL Server
+- **Authentification** : JWT (JSON Web Token), ASP.NET Identity, O2Auth
 - **Documentation** : Swagger
 
 ## Installation
-### PrÈrequis
-- .NET SDK installÈ sur votre machine
-- SQL Server pour la base de donnÈes
+### Pr√©requis
+- .NET SDK install√© sur votre machine
+- SQL Server pour la base de donn√©es
 - Un outil comme Postman ou Swagger UI pour tester l'API
 
-### …tapes d'installation
+### √âtapes d'installation
 1. **Cloner le projet**
    ```sh
    git clone https://github.com/votre-repo/api-gestion-notes.git
    cd api-gestion-notes
    ```
-2. **Configurer la base de donnÈes**
-   - Modifier la chaÓne de connexion dans `appsettings.json`
+2. **Configurer la base de donn√©es**
+   - Modifier la cha√Æne de connexion dans `appsettings.json`
    ```json
    "ConnectionStrings": {
        "DefaultConnection": "Server=localhost;Database=GestionNotesDB;User Id=sa;Password=yourpassword;"
    }
    ```
-   - ExÈcuter les migrations
+   - Ex√©cuter les migrations
    ```sh
    dotnet ef database update
    ```
@@ -48,33 +49,54 @@ L'API de gestion des notes et du module d'inscription acadÈmique permet de gÈrer
    ```
 
 ## Documentation Swagger
-Une fois l'API lancÈe, la documentation Swagger est accessible ‡ l'URL suivante :
+Une fois l'API lanc√©e, la documentation Swagger est accessible √† l'URL suivante :
 ```
 http://localhost:5000/swagger/index.html
 ```
 
 ## Endpoints Principaux
-### …tudiants
-- `GET /api/etudiants` : Liste des Ètudiants
-- `POST /api/etudiants` : Ajouter un Ètudiant
-- `GET /api/etudiants/{id}` : Obtenir un Ètudiant par ID
-- `PUT /api/etudiants/{id}` : Mettre ‡ jour un Ètudiant
-- `DELETE /api/etudiants/{id}` : Supprimer un Ètudiant
+### √âtudiants
+- `GET /api/etudiants` : Liste des √©tudiants
+- `POST /api/etudiants` : Ajouter un √©tudiant
+- `GET /api/etudiants/{id}` : Obtenir un √©tudiant par ID
+- `PUT /api/etudiants/{id}` : Mettre √† jour un √©tudiant
+- `DELETE /api/etudiants/{id}` : Supprimer un √©tudiant
 
 ### Inscriptions
-- `POST /api/inscriptions` : Inscrire un Ètudiant
-- `GET /api/inscriptions/{id}` : Obtenir l'inscription d'un Ètudiant
+- `POST /api/inscriptions` : Inscrire un √©tudiant
+- `GET /api/inscriptions/{id}` : Obtenir l'inscription d'un √©tudiant
 
 ### Notes
 - `POST /api/notes` : Ajouter une note
-- `GET /api/notes/etudiant/{id}` : Obtenir les notes d'un Ètudiant
+- `GET /api/notes/etudiant/{id}` : Obtenir les notes d'un √©tudiant
 
-## SÈcuritÈ
-L'API utilise JWT pour sÈcuriser les endpoints sensibles. Pour accÈder aux ressources protÈgÈes, il est nÈcessaire d'envoyer un token JWT dans l'en-tÍte `Authorization`.
+### Authentification et S√©curit√©
+#### API RESTful d'Authentification
+- `POST /api/auth/register` : Inscription d'un nouvel utilisateur
+- `POST /api/auth/login` : Authentification et g√©n√©ration du JWT
+- `POST /api/auth/refresh` : Rafra√Æchir un token JWT expir√©
+- Gestion des r√¥les et permissions avec ASP.NET Identity
+
+#### Syst√®me O2Auth
+- Envoi d'un lien ou d'un code √† 8 chiffres par e-mail pour validation
+- `POST /api/auth/validate` : Validation du code et g√©n√©ration d'un token
+- Stockage des tokens valid√©s dans une table `Login`
+
+## S√©curit√©
+L'API utilise JWT pour s√©curiser les endpoints sensibles. Pour acc√©der aux ressources prot√©g√©es, il est n√©cessaire d'envoyer un token JWT dans l'en-t√™te `Authorization`.
+
+## Sch√©ma de la Table Utilisateurs
+- `Id` (GUID, cl√© primaire)
+- `NomUtilisateur` (string, unique)
+- `Email` (string, unique)
+- `MotDePasseHash` (string, stock√© avec hachage s√©curis√©)
+- `Role` (string, Administrateur, Enseignant, √âtudiant...)
+- `TokenO2Auth` (nullable, stocke les tokens de validation O2Auth)
+- `DateInscription` (datetime)
 
 ## Auteurs
-- **Votre Nom** - DÈveloppeur principal
+- **Votre Nom** - D√©veloppeur principal
 
 ## Licence
-Ce projet est sous licence MIT. Vous Ítes libre de le modifier et de le distribuer en respectant les conditions de la licence.
+Ce projet est sous licence MIT. Vous √™tes libre de le modifier et de le distribuer en respectant les conditions de la licence.
 
