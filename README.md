@@ -94,8 +94,34 @@ L'API utilise JWT pour sécuriser les endpoints sensibles. Pour accéder aux res
 - `TokenO2Auth` (nullable, stocke les tokens de validation O2Auth)
 - `DateInscription` (datetime)
 
+## Dependances
+- **Swashbuckle.AspNetCore** : Swagger pour la documentation
+- **Microsoft.EntityFrameworkCore** : ORM pour la base de données
+- **Microsoft.AspNetCore.Identity** : Gestion des utilisateurs et rôles
+- **Microsoft.AspNetCore.Authentication.JwtBearer** : Authentification JWT
+- **Microsoft.AspNetCore.Cors** : Autorisations CORS
+- **Microsoft.AspNetCore.Mvc.NewtonsoftJson** : JSON Serializer
+- **Microsoft.AspNetCore.Authentication** : Authentification par token
+- **Microsoft.AspNetCore.Authentication.Cookies** : Authentification par cookies
+- **Microsoft.AspNetCore.Authentication.OAuth** : Authentification OAuth
+- **Microsoft.AspNetCore.Authentication.OAuth.Claims** : Claims pour OAuth
+- **Microsoft.AspNetCore.Authentication.OAuth.Claims** : Claims pour OAuth
+```sh
+- dotnet add package Microsoft.AspNetCore.Identity.EntityFrameworkCore &&
+dotnet add package Microsoft.AspNetCore.Authentication.JwtBearer &&
+dotnet add package Microsoft.IdentityModel.Tokens &&
+dotnet add package System.IdentityModel.Tokens.Jwt &&
+dotnet add package Microsoft.EntityFrameworkCore &&
+dotnet add package Microsoft.EntityFrameworkCore.SqlServer &&
+dotnet add package Microsoft.EntityFrameworkCore.Tools &&
+dotnet add package Swashbuckle.AspNetCore &&
+dotnet add package AutoMapper.Extensions.Microsoft.DependencyInjection &&
+dotnet add package Microsoft.AspNetCore.Mvc.NewtonsoftJson &&
+dotnet add package MailKit &&
+dotnet add package MimeKit
+```
 ## Auteurs
-- **Votre Nom** - Développeur principal
+- **Votre Nom** - ELMAXPRO
 
 ## Licence
 Ce projet est sous licence MIT. Vous êtes libre de le modifier et de le distribuer en respectant les conditions de la licence.
