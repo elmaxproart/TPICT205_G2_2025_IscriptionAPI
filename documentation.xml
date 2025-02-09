@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>gradeManagerServerAPi</name>
+    </assembly>
+    <members>
+        <member name="M:gradeManagerServerAPi.Controllers.UserC.AuthController.Register(gradeManagerServerAPi.Models.UserConnexion.RegisterModel)">
+            <summary>
+            enregistrement d'un utilisateur avec le role user
+            </summary>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:gradeManagerServerAPi.Controllers.UserC.AuthController.Login(gradeManagerServerAPi.Models.UserConnexion.LoginModel)">
+            <summary>
+            connexion de l'utilisateur + generation de JWT
+            </summary>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:gradeManagerServerAPi.Controllers.UserC.AuthController.GetCurrentUser">
+            <summary>
+            recuperer les userConnecter
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:gradeManagerServerAPi.Migrations.InitialCreate">
+            <inheritdoc />
+        </member>
+        <member name="M:gradeManagerServerAPi.Migrations.InitialCreate.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:gradeManagerServerAPi.Migrations.InitialCreate.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:gradeManagerServerAPi.Migrations.InitialCreate.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:gradeManagerServerAPi.Migrations.AddValidationCode2FA">
+            <inheritdoc />
+        </member>
+        <member name="M:gradeManagerServerAPi.Migrations.AddValidationCode2FA.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:gradeManagerServerAPi.Migrations.AddValidationCode2FA.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:gradeManagerServerAPi.Migrations.AddValidationCode2FA.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:gradeManagerServerAPi.Services.UserService.UserService.GenerateSecureKey(System.Int32)">
+            <summary>
+            Génère une clé secrète aléatoire sécurisée.
+            </summary>
+            <param name="keySizeInBits">La taille de la clé en bits (256 ou 512 bits)</param>
+            <returns>SymmetricSecurityKey générée aléatoirement</returns>
+        </member>
+    </members>
+</doc>
