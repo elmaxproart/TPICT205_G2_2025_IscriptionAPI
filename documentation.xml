@@ -48,7 +48,43 @@
         <member name="M:gradeManagerServerAPi.Migrations.AddValidationCode2FA.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
-        <member name="M:gradeManagerServerAPi.Services.UserService.UserService.GenerateSecureKey(System.Int32)">
+        <member name="T:gradeManagerServerAPi.Migrations.SecondCreate">
+            <inheritdoc />
+        </member>
+        <member name="M:gradeManagerServerAPi.Migrations.SecondCreate.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:gradeManagerServerAPi.Migrations.SecondCreate.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:gradeManagerServerAPi.Migrations.SecondCreate.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:gradeManagerServerAPi.Migrations.SecondCreate2">
+            <inheritdoc />
+        </member>
+        <member name="M:gradeManagerServerAPi.Migrations.SecondCreate2.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:gradeManagerServerAPi.Migrations.SecondCreate2.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:gradeManagerServerAPi.Migrations.SecondCreate2.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:gradeManagerServerAPi.Migrations.SecondCreate3">
+            <inheritdoc />
+        </member>
+        <member name="M:gradeManagerServerAPi.Migrations.SecondCreate3.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:gradeManagerServerAPi.Migrations.SecondCreate3.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:gradeManagerServerAPi.Migrations.SecondCreate3.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:gradeManagerServerAPi.Services.UserService.StandardConnexion.UserService.GenerateSecureKey(System.Int32)">
             <summary>
             Génère une clé secrète aléatoire sécurisée.
             </summary>

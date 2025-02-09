@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using gradeManagerServerAPi.Data.UserManagementAPI.Data;
 
@@ -11,9 +12,11 @@ using gradeManagerServerAPi.Data.UserManagementAPI.Data;
 namespace gradeManagerServerAPi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250209154523_SecondCreate")]
+    partial class SecondCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -56,23 +59,6 @@ namespace gradeManagerServerAPi.Migrations
                     b.HasIndex("SpecialiteId");
 
                     b.ToTable("Classes");
-                });
-
-            modelBuilder.Entity("Faculte", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Nom")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Facultes");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -219,6 +205,7 @@ namespace gradeManagerServerAPi.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Nom")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
@@ -226,6 +213,23 @@ namespace gradeManagerServerAPi.Migrations
                     b.HasIndex("FaculteId");
 
                     b.ToTable("Departements");
+                });
+
+            modelBuilder.Entity("gradeManagerServerAPi.Models.AdministrationM.GestionAcademique.Faculte", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Nom")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Facultes");
                 });
 
             modelBuilder.Entity("gradeManagerServerAPi.Models.AdministrationM.GestionAcademique.Filiere", b =>
@@ -240,6 +244,7 @@ namespace gradeManagerServerAPi.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Nom")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
@@ -261,6 +266,7 @@ namespace gradeManagerServerAPi.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Nom")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
@@ -282,6 +288,7 @@ namespace gradeManagerServerAPi.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Libelle")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
@@ -303,6 +310,7 @@ namespace gradeManagerServerAPi.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Nom")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
@@ -327,6 +335,7 @@ namespace gradeManagerServerAPi.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Libelle")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<int>("Semestre")
@@ -347,13 +356,14 @@ namespace gradeManagerServerAPi.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("ClasseId")
+                    b.Property<int>("ClasseId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("DateNaissance")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("Matricule")
@@ -361,15 +371,12 @@ namespace gradeManagerServerAPi.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("Nom")
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<int>("Numero")
-                        .HasColumnType("int");
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Prenom")
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Sexe")
                         .IsRequired()
@@ -431,6 +438,7 @@ namespace gradeManagerServerAPi.Migrations
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("FullName")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<bool>("LockoutEnabled")
@@ -487,21 +495,26 @@ namespace gradeManagerServerAPi.Migrations
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Address")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("City")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("Country")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<DateTime?>("DateOfBirth")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("PhoneNumber")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("State")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("UserId")
@@ -633,7 +646,7 @@ namespace gradeManagerServerAPi.Migrations
 
             modelBuilder.Entity("gradeManagerServerAPi.Models.AdministrationM.GestionAcademique.Departement", b =>
                 {
-                    b.HasOne("Faculte", "Faculte")
+                    b.HasOne("gradeManagerServerAPi.Models.AdministrationM.GestionAcademique.Faculte", "Faculte")
                         .WithMany("Departements")
                         .HasForeignKey("FaculteId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -699,9 +712,13 @@ namespace gradeManagerServerAPi.Migrations
 
             modelBuilder.Entity("gradeManagerServerAPi.Models.StudentM.Etudiant", b =>
                 {
-                    b.HasOne("Classe", null)
+                    b.HasOne("Classe", "Classe")
                         .WithMany("Etudiants")
-                        .HasForeignKey("ClasseId");
+                        .HasForeignKey("ClasseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Classe");
                 });
 
             modelBuilder.Entity("gradeManagerServerAPi.Models.StudentM.Inscription", b =>
@@ -754,14 +771,14 @@ namespace gradeManagerServerAPi.Migrations
                     b.Navigation("UEs");
                 });
 
-            modelBuilder.Entity("Faculte", b =>
-                {
-                    b.Navigation("Departements");
-                });
-
             modelBuilder.Entity("gradeManagerServerAPi.Models.AdministrationM.GestionAcademique.Departement", b =>
                 {
                     b.Navigation("Filieres");
+                });
+
+            modelBuilder.Entity("gradeManagerServerAPi.Models.AdministrationM.GestionAcademique.Faculte", b =>
+                {
+                    b.Navigation("Departements");
                 });
 
             modelBuilder.Entity("gradeManagerServerAPi.Models.AdministrationM.GestionAcademique.Filiere", b =>
