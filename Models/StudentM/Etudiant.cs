@@ -5,6 +5,7 @@ namespace gradeManagerServerAPi.Models.StudentM
 {
     public class Etudiant
     {
+        [Key]
         public int Id { get; set; }
 
         [Required(ErrorMessage = "Le matricule est obligatoire.")]
@@ -21,7 +22,7 @@ namespace gradeManagerServerAPi.Models.StudentM
        
         public DateTime DateNaissance { get; set; }
 
-       
+        
         [EmailAddress(ErrorMessage = "L'email n'est pas valide.")]
         public string Email { get; set; }
 
@@ -31,6 +32,8 @@ namespace gradeManagerServerAPi.Models.StudentM
 
         [RegularExpression("^[MF]$", ErrorMessage = "Le sexe doit être 'M' ou 'F'.")]
         public char Sexe { get; set; }
+        public int ClasseId { get; set; }
+        public Classe Classe { get; set; }
 
         [JsonIgnore]
         public virtual ICollection<Inscription> Inscriptions { get; set; } = new List<Inscription>();

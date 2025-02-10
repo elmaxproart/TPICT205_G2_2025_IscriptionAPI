@@ -107,7 +107,15 @@ namespace gradeManagerServerAPi.Data
                 builder.Entity<Inscription>()
                            .HasOne(i => i.Etudiant) // Une inscription a un étudiant  
                            .WithMany(e => e.Inscriptions) // Un étudiant a plusieurs inscriptions  
-                           .HasForeignKey(i => i.EtudiantId); // La clé étrangère  
+                           .HasForeignKey(i => i.EtudiantId); // La clé étrangère
+                                                              //inscription et ue.
+          
+                //class et etudiant
+                builder.Entity<Etudiant>()
+                    .HasOne(c=>c.Classe)
+                    .WithMany(e =>e.Etudiants)
+                    .HasForeignKey (c => c.ClasseId);
+
             }
 
         }

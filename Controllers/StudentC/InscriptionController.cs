@@ -67,6 +67,29 @@
                         return BadRequest(new { message = "Les données d'inscription sont invalides." });
                     }
 
+                    if (!ModelState.IsValid)
+                    {
+                        return BadRequest(ModelState);
+                    }
+
+                    var etudiant = await _context.Etudiants.FirstOrDefaultAsync(e => e.Matricule == inscription.Matricule);
+                    if (etudiant == null)
+                    {
+                        return BadRequest(new { message = "L'étudiant n'existe pas ou ne fait partie d'aucune classe." });
+                    }
+
+                    // Vérifier que les UE existent bien
+                    var ues = await _context.UEs.Where(ue => inscription.UeIds.Contains(ue.Id)).ToListAsync();
+                    if (ues.Count != inscription.UeIds.Count)
+                    {
+                        return BadRequest(new { message = "Une ou plusieurs UE sélectionnées n'existent pas." });
+                    }
+
+                    // Associer l'étudiant et les UE à l'inscription
+                    inscription.EtudiantId = etudiant.Id;
+                    inscription.Etudiant = etudiant;
+                    inscription.Ues = ues;
+
                     _context.Inscriptions.Add(inscription);
                     await _context.SaveChangesAsync();
 
@@ -77,6 +100,7 @@
                     return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
                 }
             }
+
 
             [HttpPut("{id}")]
             public async Task<IActionResult> PutInscription(int id, Inscription inscription)
@@ -128,31 +152,8 @@
                     return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
                 }
             }
-            // POST: api/Inscription
-            [HttpPost("/fiche-inscription-pdf")]
-            public async Task<ActionResult<Inscription>> PostInscriptionAndGeneRatePdf(Inscription inscription)
-            {
-                try
-                {
-                    if (inscription == null)
-                    {
-                        return BadRequest(new { message = "Les données d'inscription sont invalides." });
-                    }
+           
 
-                    _context.Inscriptions.Add(inscription);
-                    await _context.SaveChangesAsync();
-
-                    // Après avoir créé l'inscription, génère le PDF
-                    var pdfBytes = GeneratePdf(inscription);
-
-                    // Retourner le PDF généré en réponse
-                    return File(pdfBytes, "application/pdf", $"Fiche_Inscription_{inscription.Id}.pdf");
-                }
-                catch (Exception ex)
-                {
-                    return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
-                }
-            }
 
             // Générer le PDF à partir des données de l'inscription
             private byte[] GeneratePdf(Inscription inscription)
@@ -169,10 +170,10 @@
                             Document inscriptionDocument = document.Add(new Paragraph("Fiche d'Inscription").SetFontSize(20));
                             document.Add(new Paragraph($"ID: {inscription.Id}"));
                             document.Add(new Paragraph($"Nom: {inscription.Etudiant.Nom}"));
-                          
+                
                             document.Add(new Paragraph($"Date de Naissance: {inscription.Etudiant.DateNaissance:dd/MM/yyyy}"));
                             document.Add(new Paragraph($"Email: {inscription.Etudiant.Email}"));
-                            document.Add(new Paragraph($"Filière: {inscription.Classe.Filiere}"));
+                           
                             document.Add(new Paragraph($"Date d'Inscription: {inscription.DateInscription:dd/MM/yyyy}"));
 
                            

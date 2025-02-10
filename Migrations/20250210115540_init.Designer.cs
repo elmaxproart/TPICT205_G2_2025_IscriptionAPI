@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using gradeManagerServerAPi.Data.UserManagementAPI.Data;
 
@@ -11,9 +12,11 @@ using gradeManagerServerAPi.Data.UserManagementAPI.Data;
 namespace gradeManagerServerAPi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250210115540_init")]
+    partial class init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -29,6 +32,9 @@ namespace gradeManagerServerAPi.Migrations
                         .HasColumnType("int");
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ClasseId")
+                        .HasColumnType("int");
 
                     b.Property<int>("FiliereId")
                         .HasColumnType("int");
@@ -323,9 +329,6 @@ namespace gradeManagerServerAPi.Migrations
                     b.Property<int>("Coef")
                         .HasColumnType("int");
 
-                    b.Property<int?>("InscriptionId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Libelle")
                         .HasColumnType("longtext");
 
@@ -335,8 +338,6 @@ namespace gradeManagerServerAPi.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ClasseId");
-
-                    b.HasIndex("InscriptionId");
 
                     b.ToTable("UEs");
                 });
@@ -349,7 +350,7 @@ namespace gradeManagerServerAPi.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("ClasseId")
+                    b.Property<int?>("ClasseId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("DateNaissance")
@@ -392,47 +393,16 @@ namespace gradeManagerServerAPi.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("ClasseId")
+                    b.Property<int>("ClasseId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("DateInscription")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<DateTime>("DateNaissance")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("longtext");
-
                     b.Property<bool>("EstValide")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<int>("EtudiantId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Matricule")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Nom")
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<int>("Numero")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Prenom")
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<string>("Sexe")
-                        .IsRequired()
-                        .HasColumnType("varchar(1)");
-
-                    b.Property<string>("UeIds")
-                        .HasColumnType("longtext");
-
-                    b.Property<int>("semestre")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -727,35 +697,31 @@ namespace gradeManagerServerAPi.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("gradeManagerServerAPi.Models.StudentM.Inscription", null)
-                        .WithMany("Ues")
-                        .HasForeignKey("InscriptionId");
-
                     b.Navigation("Classe");
                 });
 
             modelBuilder.Entity("gradeManagerServerAPi.Models.StudentM.Etudiant", b =>
                 {
-                    b.HasOne("Classe", "Classe")
+                    b.HasOne("Classe", null)
                         .WithMany("Etudiants")
-                        .HasForeignKey("ClasseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Classe");
+                        .HasForeignKey("ClasseId");
                 });
 
             modelBuilder.Entity("gradeManagerServerAPi.Models.StudentM.Inscription", b =>
                 {
-                    b.HasOne("Classe", null)
+                    b.HasOne("Classe", "Classe")
                         .WithMany("Inscriptions")
-                        .HasForeignKey("ClasseId");
+                        .HasForeignKey("ClasseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("gradeManagerServerAPi.Models.StudentM.Etudiant", "Etudiant")
                         .WithMany("Inscriptions")
                         .HasForeignKey("EtudiantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Classe");
 
                     b.Navigation("Etudiant");
                 });
@@ -815,11 +781,6 @@ namespace gradeManagerServerAPi.Migrations
             modelBuilder.Entity("gradeManagerServerAPi.Models.StudentM.Etudiant", b =>
                 {
                     b.Navigation("Inscriptions");
-                });
-
-            modelBuilder.Entity("gradeManagerServerAPi.Models.StudentM.Inscription", b =>
-                {
-                    b.Navigation("Ues");
                 });
 #pragma warning restore 612, 618
         }

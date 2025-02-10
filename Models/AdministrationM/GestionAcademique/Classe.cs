@@ -9,7 +9,7 @@ public class Classe
     public int SpecialiteId { get; set; }
     public int NiveauId { get; set; }
     public int GradeId { get; set; }
-    public int ClasseId { get; set; }
+
 
     // Propriétés de navigation
     public virtual Filiere Filiere { get; set; }
@@ -21,5 +21,6 @@ public class Classe
     [JsonIgnore]
     public virtual ICollection<UE> UEs { get; set; } = [];
     [JsonIgnore]
-    public virtual ICollection<Inscription> Inscriptions { get; set; }=[];
+    public ICollection<Inscription> Inscriptions { get; set; } = new List<Inscription>();
+
 }
