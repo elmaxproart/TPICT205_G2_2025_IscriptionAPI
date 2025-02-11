@@ -45,6 +45,19 @@ namespace gradeManagerServerAPi
                     };
                 });
 
+            // Ajouter la politique CORS ici
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowSpecificOrigin", policy =>
+                {
+                    policy.WithOrigins("https://localhost:5000")
+                          .AllowAnyHeader()
+                          .AllowAnyMethod()
+                          .AllowCredentials()   // Permet les cookies ou les informations d'identification
+                          .SetPreflightMaxAge(TimeSpan.FromMinutes(10));  // Durée de validité du cache des requêtes pré-vol (preflight)
+                });
+            });
+
             // Ajouter les services nécessaires au conteneur
             builder.Services.AddAuthorization();
             builder.Services.AddControllers();
@@ -71,35 +84,28 @@ namespace gradeManagerServerAPi
                     }
                 });
 
-
-
                 c.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
                 {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                }
-            },
-            new string[] { }
-        }
-    });
-
-
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        new string[] { }
+                    }
+                });
 
                 // Inclure les commentaires XML dans Swagger
                 var xmlFile = "documentation.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
-
-
             });
 
             var app = builder.Build();
-            builder.Services.AddEndpointsApiExplorer();
 
             // Créer les rôles et assigner les utilisateurs
             using (var scope = app.Services.CreateScope())
@@ -147,7 +153,10 @@ namespace gradeManagerServerAPi
             app.UseHttpsRedirection();
 
             app.UseAuthentication(); // Utilisation de l'authentification JWT
-            app.UseAuthorization();  // Utilisation de l'autorisation avec les rôles
+            app.UseAuthorization();  // Utilisation de l'autorisation
+
+            // Utiliser la politique CORS dans l'application
+            app.UseCors("AllowSpecificOrigin");
 
             app.MapControllers(); // Mapping des contrôleurs
 

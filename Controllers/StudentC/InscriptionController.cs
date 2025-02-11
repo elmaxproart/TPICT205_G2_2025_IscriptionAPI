@@ -84,11 +84,12 @@
                     {
                         return BadRequest(new { message = "Une ou plusieurs UE sélectionnées n'existent pas." });
                     }
-
                     // Associer l'étudiant et les UE à l'inscription
                     inscription.EtudiantId = etudiant.Id;
                     inscription.Etudiant = etudiant;
                     inscription.Ues = ues;
+                    inscription.DateInscription = DateTime.Now;
+                    inscription.EstValide = true; // Marquer l'inscription comme valide
 
                     _context.Inscriptions.Add(inscription);
                     await _context.SaveChangesAsync();

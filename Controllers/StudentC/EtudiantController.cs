@@ -54,7 +54,6 @@ namespace gradeManagerServerAPi.Controllers
             }
         }
 
-        // ✅ POST : api/Etudiants (Ajoute un étudiant avec validation)
         [HttpPost]
         public async Task<ActionResult<Etudiant>> PostEtudiant([FromBody] Etudiant etudiant)
         {
@@ -65,8 +64,19 @@ namespace gradeManagerServerAPi.Controllers
 
             try
             {
+                // ✅ Vérifie si la classe existe en base avant d'affecter l'étudiant
+                var classe = await _context.Classes.FindAsync(etudiant.ClasseId);
+                if (classe == null)
+                {
+                    return NotFound("Classe introuvable");
+                }
+
+                // ✅ Associe la classe trouvée à l'étudiant
+                etudiant.Classe = classe;
+
                 _context.Etudiants.Add(etudiant);
                 await _context.SaveChangesAsync();
+
                 return CreatedAtAction(nameof(GetEtudiant), new { id = etudiant.Id }, etudiant);
             }
             catch (DbUpdateException dbEx)
@@ -78,6 +88,29 @@ namespace gradeManagerServerAPi.Controllers
                 return StatusCode(500, $"Erreur interne : {ex.Message}");
             }
         }
+        // ✅ Recherche un étudiant par matricule et vérifie s'il a une classe
+        [HttpGet("rechercher/{matricule}")]
+        public async Task<ActionResult<Etudiant>> GetEtudiantByMatricule(string matricule)
+        {
+            
+            var etudiant = await _context.Etudiants
+                                         .Where(e => e.Matricule == matricule)
+                                         .Include(e => e.Classe) 
+                                         .FirstOrDefaultAsync();
+
+            if (etudiant == null)
+            {
+                return NotFound($"Étudiant avec matricule {matricule} non trouvé.");
+            }
+
+            if (etudiant.Classe == null)
+            {
+                return NotFound($"L'étudiant avec matricule {matricule} n'a pas de classe attribuée.");
+            }
+
+            return Ok(etudiant);
+        }
+    
 
         // ✅ PUT : api/Etudiants/{id} (Met à jour un étudiant)
         [HttpPut("{id}")]
