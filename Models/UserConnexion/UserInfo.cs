@@ -24,10 +24,14 @@ namespace gradeManagerServerAPi.Models.UserConnexion
 
     public class RegisterModel
     {
-        public string FullName { get; set; }
-        public string Email { get; set; }
-        public string Password { get; set; }
+        public string FullName { get; set; }  // Nom complet
+        public string FirstName { get; set; } // Prénom
+        public string LastName { get; set; }  // Nom de famille
+        public string Email { get; set; }     // Email
+        public string Password { get; set; }  // Mot de passe
+        public string Title { get; set; }     // Titre (ex: Mr, Mme)
     }
+
 
     public class LoginModel
     {

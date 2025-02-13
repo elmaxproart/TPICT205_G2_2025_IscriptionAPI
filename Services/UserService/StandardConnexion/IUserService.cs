@@ -6,7 +6,6 @@ namespace gradeManagerServerAPi.Services.UserService.StandardConnexion
     public interface IUserService
     {
         string GenerateJwtToken(ApplicationUser user);
-
-
+        Task RevokeOldTokensAsync(ApplicationUser user);
     }
 }

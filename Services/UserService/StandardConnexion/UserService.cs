@@ -58,6 +58,11 @@ namespace gradeManagerServerAPi.Services.UserService.StandardConnexion
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
+        public Task RevokeOldTokensAsync(ApplicationUser user)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Génère une clé secrète aléatoire sécurisée.
         /// </summary>

@@ -108,6 +108,18 @@
         <member name="M:gradeManagerServerAPi.Migrations.init12.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
+        <member name="T:gradeManagerServerAPi.Migrations.InitialCreate_Inscription">
+            <inheritdoc />
+        </member>
+        <member name="M:gradeManagerServerAPi.Migrations.InitialCreate_Inscription.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:gradeManagerServerAPi.Migrations.InitialCreate_Inscription.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:gradeManagerServerAPi.Migrations.InitialCreate_Inscription.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
         <member name="M:gradeManagerServerAPi.Services.UserService.StandardConnexion.UserService.GenerateSecureKey(System.Int32)">
             <summary>
             Génère une clé secrète aléatoire sécurisée.

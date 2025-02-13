@@ -35,23 +35,44 @@ namespace gradeManagerServerAPi.Controllers.UserC
 
 
         }
-            /// <summary>
-            /// enregistrement d'un utilisateur avec le role user
-            /// </summary>
-            /// <param name="model"></param>
-            /// <returns></returns>
-            [HttpPost("register")]
-            public async Task<IActionResult> Register([FromBody] RegisterModel model)
+        /// <summary>
+        /// Enregistrement d'un utilisateur avec le rôle "User"
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody] RegisterModel model)
+        {
+           
+            var user = new ApplicationUser
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, FullName = model.FullName };
-                var result = await _userManager.CreateAsync(user, model.Password);
-                if (result.Succeeded)
-                {
-                    await _userManager.AddToRoleAsync(user, "User");
-                    return Ok(new { message = "Utilisateur créé avec succès." });
-                }
-                return BadRequest(result.Errors);
+                UserName = model.Email,
+                Email = model.Email,
+                NickName = model.FullName,
+                FirstName = model.FirstName,  
+                LastName = model.LastName,    
+                Title = model.Title,          
+                Enable = true,                
+                createAt = DateTime.Now,      
+                UpdateAt = DateTime.Now       
+            };
+
+            
+            var result = await _userManager.CreateAsync(user, model.Password);
+
+            if (result.Succeeded)
+            {
+                
+                await _userManager.AddToRoleAsync(user, "User");
+
+               
+                return Ok(new { message = "Utilisateur créé avec succès." });
             }
+
+           
+            return BadRequest(result.Errors);
+        }
+
         /// <summary>
         /// connexion de l'utilisateur + generation de JWT
         /// </summary>
@@ -63,34 +84,33 @@ namespace gradeManagerServerAPi.Controllers.UserC
             var user = await _userManager.FindByEmailAsync(model.Email);
             if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
             {
-                // Vérification 2FA : Si l'utilisateur a 2FA activé, générer et enregistrer le code
+                // Si 2FA est activé
                 if (await _userManager.GetTwoFactorEnabledAsync(user))
                 {
-                    // Générer et enregistrer le code 2FA dans la BD via ValidationCodeService
-                    var code = await _validationCodeService.GenerateAndSaveCodeAsync(user); // Appelle la méthode pour générer et sauvegarder le code 2FA
-
+                   
+                    // Générer et envoyer le code 2FA
+                    var code = await _validationCodeService.GenerateAndSaveCodeAsync(user);
                     var message = $"Votre code 2FA est : {code}. Il expirera dans 10 minutes.";
 
-                    // Envoyer le code par e-mail
                     var sendEmailResult = await _emailSender.SendEmailAsync(user.Email, "Code de vérification 2FA", message);
 
                     if (!sendEmailResult)
                     {
-                        return StatusCode(500, "Erreur lors de l'envoi du code de vérification.\n Votre connexion peut être instable.");
+                        return StatusCode(500, "Erreur lors de l'envoi du code de vérification.\nVotre connexion peut être instable.");
                     }
 
-                    // Demander à l'utilisateur de saisir le code 2FA
                     return Ok(new { message = "Veuillez vérifier votre e-mail pour le code 2FA." });
                 }
 
-                // Générer un JWT si la vérification 2FA n'est pas activée
-                var userResult = _mapper.Map<ApplicationUser, object>(user);
+                // Si 2FA n'est pas activé, générer un nouveau token 
+            
                 var token = _userService.GenerateJwtToken(user);
                 return Ok(new { token });
             }
 
             return Unauthorized();
         }
+
 
 
         /// <summary>
@@ -104,7 +124,7 @@ namespace gradeManagerServerAPi.Controllers.UserC
                 var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 var user = await _userManager.FindByIdAsync(userId);
                 if (user == null) return NotFound();
-                return Ok(new { user.Email, user.FullName, Roles = await _userManager.GetRolesAsync(user) });
+                return Ok(new { user.Email, user.NickName, Roles = await _userManager.GetRolesAsync(user) });
             }
         }
 

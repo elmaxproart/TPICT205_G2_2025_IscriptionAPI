@@ -2,6 +2,7 @@
 namespace gradeManagerServerAPi.Data
 {
     using gradeManagerServerAPi.Models.AdministrationM.GestionAcademique;
+    using gradeManagerServerAPi.Models.paiement;
     using gradeManagerServerAPi.Models.StudentM;
     using gradeManagerServerAPi.Models.UserConnexion;
     using gradeManagerServerAPi.Services.UserService._2FA;
@@ -31,7 +32,8 @@ namespace gradeManagerServerAPi.Data
             // Tables Étudiant & Inscription
             public DbSet<Etudiant> Etudiants { get; set; }
             public DbSet<Inscription> Inscriptions { get; set; }
-
+            //paiement
+            public DbSet<Paiement> Paiements { get; set; }
 
             protected override void OnModelCreating(ModelBuilder builder)
             {
@@ -115,6 +117,21 @@ namespace gradeManagerServerAPi.Data
                     .HasOne(c=>c.Classe)
                     .WithMany(e =>e.Etudiants)
                     .HasForeignKey (c => c.ClasseId);
+
+
+                builder.Entity<Paiement>()
+               .Property(p => p.Montant)
+               .HasColumnType("decimal(18,2)");
+
+                builder.Entity<Paiement>()
+               .HasKey(p => p.Id); // Définit Id comme clé primaire  
+
+                // Configuration de la relation un-à-plusieurs entre Etudiant et Paiement  
+                builder.Entity<Etudiant>()
+                    .HasMany(e => e.Paiements)          // Un étudiant a plusieurs paiements  
+                    .WithOne(p => p.Etudiant)            // Chaque paiement est pour un étudiant  
+                    .HasForeignKey(p => p.EtudiantId)    // La clé étrangère dans Paiement  
+                    .OnDelete(DeleteBehavior.Cascade);
 
             }
 

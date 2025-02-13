@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using gradeManagerServerAPi.Models.paiement;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace gradeManagerServerAPi.Models.StudentM
@@ -34,6 +35,8 @@ namespace gradeManagerServerAPi.Models.StudentM
         public char Sexe { get; set; }
         public int ClasseId { get; set; }
         public Classe Classe { get; set; }
+        [JsonIgnore]
+        public virtual ICollection<Paiement> Paiements { get; set; } = new List<Paiement>();
 
         [JsonIgnore]
         public virtual ICollection<Inscription> Inscriptions { get; set; } = new List<Inscription>();

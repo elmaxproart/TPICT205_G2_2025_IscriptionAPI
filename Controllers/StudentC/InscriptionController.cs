@@ -56,7 +56,30 @@
                     return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
                 }
             }
+            [HttpGet("etudiants-payes")]
+            public async Task<ActionResult<IEnumerable<Etudiant>>> GetEtudiantsAyantPaye()
+            {
+                try
+                {
+                    // Récupérer les étudiants ayant des paiements valides  
+                    var etudiantsAyantPaye = await _context.Etudiants
+                        .Include(e => e.Paiements) // Inclure les paiements pour une éventuelle validation supplémentaire  
+                        .Where(e => e.Paiements.Any(p => p.Valide)) // Filtrer uniquement les étudiants avec des paiements valides  
+                        .ToListAsync();
 
+                    // Vérifier s'il n'y a pas d'étudiants trouvés  
+                    if (!etudiantsAyantPaye.Any())
+                    {
+                        return NotFound(new { message = "Aucun étudiant n'a effectué de paiement valide." });
+                    }
+
+                    return Ok(etudiantsAyantPaye);
+                }
+                catch (Exception ex)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+                }
+            }
             [HttpPost]
             public async Task<ActionResult<Inscription>> PostInscription(Inscription inscription)
             {
@@ -78,18 +101,36 @@
                         return BadRequest(new { message = "L'étudiant n'existe pas ou ne fait partie d'aucune classe." });
                     }
 
-                    // Vérifier que les UE existent bien
+                    // Vérifier que les UE existent bien  
                     var ues = await _context.UEs.Where(ue => inscription.UeIds.Contains(ue.Id)).ToListAsync();
                     if (ues.Count != inscription.UeIds.Count)
                     {
                         return BadRequest(new { message = "Une ou plusieurs UE sélectionnées n'existent pas." });
                     }
-                    // Associer l'étudiant et les UE à l'inscription
+
+                    // Vérifier si l'étudiant a effectué un paiement valide  
+                    var paiement = await _context.Paiements
+                        .FirstOrDefaultAsync(p => p.EtudiantId == etudiant.Id && p.Valide);
+                    if (paiement == null)
+                    {
+                        return BadRequest(new { message = "L'étudiant n'a pas effectué de paiement valide." });
+                    }
+
+                    // Vérifier si l'étudiant est déjà inscrit  
+                    var inscriptionExistante = await _context.Inscriptions
+                        .FirstOrDefaultAsync(i => i.EtudiantId == etudiant.Id && i.EstValide);
+                    if (inscriptionExistante != null)
+                    {
+                        return BadRequest(new { message = "L'étudiant est déjà inscrit." });
+                    }
+
+                    // Associer l'étudiant et les UE à l'inscription  
                     inscription.EtudiantId = etudiant.Id;
                     inscription.Etudiant = etudiant;
                     inscription.Ues = ues;
                     inscription.DateInscription = DateTime.Now;
-                    inscription.EstValide = true; // Marquer l'inscription comme valide
+                    inscription.EstValide = true;
+                    inscription.semestre = 1;
 
                     _context.Inscriptions.Add(inscription);
                     await _context.SaveChangesAsync();
@@ -101,7 +142,6 @@
                     return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
                 }
             }
-
 
             [HttpPut("{id}")]
             public async Task<IActionResult> PutInscription(int id, Inscription inscription)

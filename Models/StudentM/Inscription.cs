@@ -39,11 +39,12 @@ namespace gradeManagerServerAPi.Models.StudentM
 
         [JsonIgnore]
         public List<UE> Ues { get; set; } = new List<UE>();
-
+        [JsonIgnore]
         public DateTime DateInscription { get; set; }
 
         [JsonIgnore]
         public bool EstValide { get; set; }
+        [JsonIgnore]
         public int semestre { get; set; }
     }
 }
