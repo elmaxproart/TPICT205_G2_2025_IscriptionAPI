@@ -46,5 +46,8 @@ namespace gradeManagerServerAPi.Models.StudentM
         public bool EstValide { get; set; }
         [JsonIgnore]
         public int semestre { get; set; }
+
+   
+
     }
 }
