@@ -35,43 +35,37 @@ namespace gradeManagerServerAPi.Controllers.UserC
 
 
         }
-        /// <summary>
-        /// Enregistrement d'un utilisateur avec le rôle "User"
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterModel model)
         {
-           
             var user = new ApplicationUser
             {
                 UserName = model.Email,
                 Email = model.Email,
                 NickName = model.FullName,
-                FirstName = model.FirstName,  
-                LastName = model.LastName,    
-                Title = model.Title,          
-                Enable = true,                
-                createAt = DateTime.Now,      
-                UpdateAt = DateTime.Now       
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                Title = model.Title,
+                Enable = true,
+                createAt = DateTime.Now,
+                UpdateAt = DateTime.Now
             };
 
-            
             var result = await _userManager.CreateAsync(user, model.Password);
 
             if (result.Succeeded)
             {
-                
-                await _userManager.AddToRoleAsync(user, "User");
+                await _userManager.AddToRoleAsync(user, "Admin");
 
-               
-                return Ok(new { message = "Utilisateur créé avec succès." });
+                // Activer 2FA sans envoyer de code
+                await _userManager.SetTwoFactorEnabledAsync(user, true);
+
+                return Ok(new { message = "Utilisateur créé avec succès. 2FA activé." });
             }
 
-           
             return BadRequest(result.Errors);
         }
+
 
         /// <summary>
         /// connexion de l'utilisateur + generation de JWT

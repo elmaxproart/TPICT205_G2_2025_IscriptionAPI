@@ -92,7 +92,8 @@ namespace gradeManagerServerAPi.Services.UserService
             {
                 return Unauthorized("Code 2FA invalide ou expiré.");
             }
-
+           
+            await _userManager.SetTwoFactorEnabledAsync(user, false);
             // Générer un token JWT
             var token = _userService.GenerateJwtToken(user);
             return Ok(new { token });

@@ -4,13 +4,6 @@
         <name>gradeManagerServerAPi</name>
     </assembly>
     <members>
-        <member name="M:gradeManagerServerAPi.Controllers.UserC.AuthController.Register(gradeManagerServerAPi.Models.UserConnexion.RegisterModel)">
-            <summary>
-            enregistrement d'un utilisateur avec le role user
-            </summary>
-            <param name="model"></param>
-            <returns></returns>
-        </member>
         <member name="M:gradeManagerServerAPi.Controllers.UserC.AuthController.Login(gradeManagerServerAPi.Models.UserConnexion.LoginModel)">
             <summary>
             connexion de l'utilisateur + generation de JWT
