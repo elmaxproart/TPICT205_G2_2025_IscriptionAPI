@@ -58,6 +58,27 @@
                     return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
                 }
             }
+           [HttpGet("matricule/{mat}")]
+public async Task<ActionResult<Inscription>> GetInscriptionWihtMat(string mat)
+{
+    try
+    {
+        var inscription = await _context.Inscriptions
+            .FirstOrDefaultAsync(i => i.Matricule == mat); // Recherche par matricule
+
+        if (inscription == null)
+        {
+            return NotFound(new { message = "Inscription non trouvée." });
+        }
+
+        return Ok(inscription);
+    }
+    catch (Exception ex)
+    {
+        return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+    }
+}
+
             [HttpGet("etudiants-payes")]
             public async Task<ActionResult<IEnumerable<Etudiant>>> GetEtudiantsAyantPaye()
             {
@@ -202,53 +223,58 @@
                     // Dessiner le texte centré
                     gfx.DrawString("Université Yaoundé 1", titleFont, titleColor, new XPoint(xPos, yPos));
 
-
                     yPos += 30;
                     gfx.DrawString("Faculté des Sciences", fieldFont, fieldColor, new XPoint(40, yPos));
                     gfx.DrawString("Faculty of Science", fieldFont, fieldColor, new XPoint(page.Width - 200, yPos));
 
-                    yPos += 20; // Espacement plus petit entre les lignes
+                    yPos += 20;
 
                     gfx.DrawString("Semestre: " + inscription.semestre, fieldFont, fieldColor, new XPoint(40, yPos));
                     gfx.DrawString("Semester: " + inscription.semestre, fieldFont, fieldColor, new XPoint(page.Width - 200, yPos));
 
-                    yPos += 20; // Espacement entre les autres lignes
+                    yPos += 20;
 
                     gfx.DrawString("Département: d'informatique", fieldFont, fieldColor, new XPoint(40, yPos));
                     gfx.DrawString("Department: Computer Science", fieldFont, fieldColor, new XPoint(page.Width - 200, yPos));
+                    double photoWidth = 4 * 28.35;
+                    double photoHeight = 4 * 28.35;
+                    double photoXPos = page.Width - 50 - photoWidth;
+                    XPen dottedLinePen = new XPen(XColors.Black, 1) { DashStyle = XDashStyle.Dot };
+                    gfx.DrawLine(dottedLinePen, photoXPos, yPos + 10, photoXPos + photoWidth, yPos + 10);
+                    yPos += 5;
 
-                    yPos += 1;
-
-                    XImage image = XImage.FromFile(@"icon-192.png"); 
-
-                    
-                    double logoWidthInPoints = 100 * 72 / 96;  
-                    double logoHeightInPoints = 100 * 72 / 96; 
-
-                    
+                  
+                    XImage image = XImage.FromFile(@"icon-192.png");
+                    double logoWidthInPoints = 100 * 72 / 96;
+                    double logoHeightInPoints = 100 * 72 / 96;
                     double imageX = (page.Width - logoWidthInPoints) / 2;
                     double imageY = yPos;
-
-                   
                     gfx.DrawImage(image, imageX, imageY, logoWidthInPoints, logoHeightInPoints);
 
-                    
                     yPos += (int)(logoHeightInPoints + 20);
+                   
+                    yPos += 30; 
+                  
+                  
+
+                    gfx.DrawString("Collez votre photo ici", fieldFont, XBrushes.Gray, new XPoint(photoXPos, yPos));
 
 
+                     dottedLinePen = new XPen(XColors.Black, 1) { DashStyle = XDashStyle.Dot };
+                    gfx.DrawLine(dottedLinePen, photoXPos, yPos + 10, photoXPos + photoWidth, yPos + 10); 
+
+                
 
                     yPos += 50;
-                    
-
-                    gfx.DrawString("Fiche d'Inscription ", titleFont, titleColor, new XPoint(xPos, yPos));
+                    gfx.DrawString("Fiche d'Inscription", titleFont, titleColor, new XPoint(xPos, yPos));
                     yPos += 20;
-                    gfx.DrawString("2024-2025 ", titleFont, titleColor, new XPoint(xPos, yPos));
+                    gfx.DrawString("2024-2025", titleFont, titleColor, new XPoint(xPos, yPos));
                     yPos += 40;
 
                     gfx.DrawLine(lineColor, 40, yPos, page.Width - 40, yPos);
                     yPos += 30;
 
-                    // Informations de l'étudiant - Champs à gauche, Valeurs à droite
+                
                     gfx.DrawString("Matricule:", fieldFont, fieldColor, new XPoint(40, yPos));
                     gfx.DrawString(inscription.Etudiant.Matricule, bodyFont, valueColor, new XPoint(page.Width - 200, yPos));
                     yPos += 20;
@@ -269,11 +295,9 @@
                     gfx.DrawString(inscription.DateInscription.ToString("dd/MM/yyyy"), bodyFont, valueColor, new XPoint(page.Width - 200, yPos));
                     yPos += 30;
 
-                    // Ligne de séparation
                     gfx.DrawLine(lineColor, 40, yPos, page.Width - 40, yPos);
                     yPos += 30;
 
-                    // Informations sur les Unités d'Enseignement (UE) sous forme de tableau
                     if (inscription.Ues == null || !inscription.Ues.Any())
                     {
                         gfx.DrawString("Aucune Unité d'Enseignement sélectionnée.", bodyFont, valueColor, new XPoint(40, yPos));
@@ -283,38 +307,67 @@
                         gfx.DrawString("Unités d'Enseignement sélectionnées :", bodyFont, valueColor, new XPoint(40, yPos));
                         yPos += 20;
 
-                        // Dessiner le tableau des UE
+                       
                         double tableStartY = yPos;
-                        gfx.DrawString("Libellé", headerFont, XBrushes.DarkGreen, new XPoint(40, tableStartY));
-                        gfx.DrawString("Semestre", headerFont, XBrushes.DarkGreen, new XPoint(page.Width - 180, tableStartY));
+                        double columnWidth1 = 40;
+                        double columnWidth2 = 120;
+                        double columnWidth3 = page.Width -300;  
+
+                        gfx.DrawString("Num", headerFont, XBrushes.DarkGreen, new XPoint(columnWidth1, tableStartY));
+                        gfx.DrawString("CODE", headerFont, XBrushes.DarkGreen, new XPoint(columnWidth2, tableStartY));
+                        gfx.DrawString("INTITULE", headerFont, XBrushes.DarkGreen, new XPoint(columnWidth3, tableStartY));
+
                         yPos += 20;
 
+                        int idCounter = 1;
+
+                       
                         foreach (var ue in inscription.Ues)
                         {
-                            gfx.DrawString(ue.Libelle, bodyFont, valueColor, new XPoint(40, yPos));
-                            gfx.DrawString($"Semestre {ue.Semestre}", bodyFont, valueColor, new XPoint(page.Width - 180, yPos));
+                            gfx.DrawString(idCounter.ToString(), bodyFont, valueColor, new XPoint(columnWidth1, yPos)); 
+                            gfx.DrawString(ue.Libelle, bodyFont, valueColor, new XPoint(columnWidth2, yPos)); 
+                            gfx.DrawString(ue.intitule_e, bodyFont, valueColor, new XPoint(columnWidth3, yPos)); 
+
                             yPos += 20;
+                            idCounter++;
                         }
+
+                        yPos += 30;
                     }
 
+
+                    
+                    gfx.DrawString("Observations supplémentaires:", headerFont, XBrushes.DarkBlue, new XPoint(40, yPos));
+                    yPos += 20;
+
+                  
+                    gfx.DrawString("L'étudiant est prie d'imprimer cette fiche et de deposer a la scolarite.", bodyFont, valueColor, new XPoint(40, yPos));
+                    yPos += 20;
+
+                    gfx.DrawString("Veuillez vous assurer de bien respecter les échéances.", bodyFont, valueColor, new XPoint(40, yPos));
                     yPos += 30;
 
-                    // Ligne de séparation
+                    
                     gfx.DrawLine(lineColor, 40, yPos, page.Width - 40, yPos);
                     yPos += 10;
 
-                    yPos += 150;
-                    // Signature en bas à droite
-                    gfx.DrawString("Signature de l'étudiant : ____________________", bodyFont, valueColor, new XPoint(page.Width - 250, yPos));
+                    yPos += 50;
+                    
+                    gfx.DrawString("Signature de l'étudiant ________________:", bodyFont, valueColor, new XPoint(page.Width - 350, yPos));
+                    yPos += 30;
 
-                    // Sauvegarder le fichier PDF dans un MemoryStream
+                    
+                    gfx.DrawString("Signature du chef de departement_______________ :", bodyFont, valueColor, new XPoint(page.Width - 350, yPos));
+
+                    
                     document.Save(memoryStream);
-                    memoryStream.Position = 0; // Rewind le MemoryStream avant de le lire
+                    memoryStream.Position = 0; 
 
-                    // Retourner le fichier PDF généré pour téléchargement
+                    
                     return (memoryStream.ToArray(), fileName);
                 }
             }
+
 
 
             [HttpGet("fiche-pdf/{matricule}")]
@@ -343,8 +396,8 @@
                     // Générer le PDF
                     var pdfResult = await GeneratePdf(matricule);
 
-                    // Retourner le fichier PDF généré
-                    return File(pdfResult.FileContents, "application/pdf", pdfResult.FileName);
+                    // Retourner le fichier PDF avec un nom par défaut pour le téléchargement
+                    return File(pdfResult.FileContents, "application/pdf", $"{matricule}_fiche.pdf");
                 }
                 catch (Exception ex)
                 {
@@ -353,6 +406,7 @@
                     return StatusCode(500, new { message = $"Erreur lors de la génération du PDF: {ex.Message}" });
                 }
             }
+
 
             [HttpPut("{id}")]
             public async Task<IActionResult> PutInscription(int id, Inscription inscription)

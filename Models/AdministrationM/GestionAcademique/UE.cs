@@ -10,5 +10,8 @@
         // Relation avec Classe
         public int ClasseId { get; set; }
         public Classe Classe { get; set; } // Navigation Property
+
+        public string intitule_f { get; set; }
+        public string intitule_e { get; set; }
     }
 }
